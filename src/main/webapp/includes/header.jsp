@@ -13,7 +13,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link href="/touk_parking_meter/css/style.css" rel="stylesheet" type="text/css">
-    <title>My first gradle project</title>
+    <title>Touk Parking Meter</title>
 </head>
 <body>
 

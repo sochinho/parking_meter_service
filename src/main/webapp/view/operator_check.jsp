@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 
-<%@include file="includes/header.jsp" %>
+<%@include file="../includes/header.jsp" %>
 
 <c:if test="${not empty sps}">
     Vehicle: ${sps.vehicle.identifier} has started parking meter from ${sps.startDate}
@@ -15,4 +15,4 @@
     Vehicle: ${vid} has not started parking meter
 </c:if>
 
-<%@include file="includes/footer.jsp" %>
+<%@include file="../includes/footer.jsp" %>

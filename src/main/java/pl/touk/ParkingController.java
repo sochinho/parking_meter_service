@@ -25,16 +25,20 @@ import com.sun.jersey.api.view.Viewable;
 import pl.touk.entities.*;
 import pl.touk.dao.SingleParkingStopDao;
 import pl.touk.exceptions.DuplicateRowException;
+import pl.touk.exceptions.InvalidInputException;
 import pl.touk.exceptions.NoRowException;
 import pl.touk.types.DriverType;
 import pl.touk.utilis.FinancialCalculator;
-import pl.touk.validation.ValidString;
+import pl.touk.validation.InputDateValidator;
+import pl.touk.validation.InputStringValidator;
 
 @Path("/parkings")
 public class ParkingController {
     @Context
     UriInfo uriInfo;
 
+    InputStringValidator stringValidator = InputStringValidator.getInstance();
+    InputDateValidator dateValidator= InputDateValidator.getInstance();
     List<String> errors = new ArrayList<String>();
 
     @GET
@@ -55,92 +59,124 @@ public class ParkingController {
     @POST
     @Path("start_meter.go")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Viewable startMeter(@Valid @ValidString @FormParam("fname") String fname,
-                               @Valid @ValidString @FormParam("lname") String lname,
-                               @Valid @ValidString @FormParam("vehicle") String vid,
+    public Viewable startMeter(@FormParam("fname") String fname,
+                               @FormParam("lname") String lname,
+                               @FormParam("vehicle") String vid,
                                @FormParam("tdriver") String tdriver,
                                @Context HttpServletRequest request,
-                               @Context HttpServletResponse response)	{
-        SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
-        SingleParkingStop sps = new SingleParkingStop(new Driver(fname, lname, DriverType.valueOf(tdriver)), new Vehicle(vid));
-        sps.startMeter();
+                               @Context HttpServletResponse response) throws InvalidInputException {
         try {
+            if(!(stringValidator.isValid(fname) && stringValidator.isValid(lname) && stringValidator.isValid(vid))) throw new InvalidInputException("Invalid input data.");
+            SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
+            SingleParkingStop sps = new SingleParkingStop(new Driver(fname, lname, DriverType.valueOf(tdriver)), new Vehicle(vid));
+            sps.startMeter();
             spsDao.insertParkingStop(sps);
-        } catch (DuplicateRowException e)   {
-            errors.add("The driver: " + fname + " " + lname + " with vehicle " + vid + " has already started parking meter");
+            request.setAttribute("sps", sps);
+        } catch (InvalidInputException e)   {
+            errors.add("Input data is invalid. The minimum text length is 2, maximum 50.");
             request.setAttribute("error", errors);
-            return new Viewable("/start_meter.jsp", null);
+        } catch (DuplicateRowException e) {
+            errors.add("The driver: " + fname + " " + lname + " with vehicle " + vid + " has already started parking meter.");
+            request.setAttribute("error", errors);
+        } finally {
+            return new Viewable("/view/start_meter.jsp", null);
         }
-        request.setAttribute("sps", sps);
-        return new Viewable("/start_meter.jsp", null);
     }
 
     @POST
     @Path("stop_meter.go")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Viewable stopMeter(@Valid @ValidString @FormParam("fname") String fname,
-                              @Valid @ValidString @FormParam("lname") String lname,
-                              @Valid @ValidString @FormParam("vehicle") String vid,
+    public Viewable stopMeter(@FormParam("fname") String fname,
+                              @FormParam("lname") String lname,
+                              @FormParam("vehicle") String vid,
                               @Context HttpServletRequest request,
-                              @Context HttpServletResponse response)	{
-        SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
-        SingleParkingStop sps = null;
+                              @Context HttpServletResponse response) throws InvalidInputException {
         try {
+            if(!(stringValidator.isValid(fname) && stringValidator.isValid(lname) && stringValidator.isValid(vid))) throw new InvalidInputException("Invalid input data.");
+            SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
+            SingleParkingStop sps = null;
             spsDao.stopParkingStop(vid, fname, lname);
+            request.setAttribute("sps", sps);
+        } catch (InvalidInputException e)   {
+            errors.add("Input data is invalid. The minimum text length is 2, maximum 50.");
+            request.setAttribute("error", errors);
         } catch(NoRowException e) {
             errors.add("The driver: " + fname + " " + lname + " with vehicle " + vid + " has not started parking meter");
             request.setAttribute("error", errors);
-            return new Viewable("/stop_meter.jsp", null);
+        } finally {
+            return new Viewable("/view/stop_meter.jsp", null);
         }
-        request.setAttribute("sps", sps);
-        return new Viewable("/stop_meter.jsp", null);
     }
 
     @POST
     @Path("driver_check.go")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    public String driverCheckStop(@NotNull @Size(min = 2, max = 50) @FormParam("fname") String fname,
-                                  @NotNull @Size(min = 2, max = 50) @FormParam("lname") String lname,
-                                  @NotNull @Size(min = 2, max = 50) @FormParam("vehicle") String vid)	{
-        SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
-        SingleParkingStop sps = spsDao.getParkingStop(vid, fname, lname);
-        FinancialCalculator fc = FinancialCalculator.getInstance();
-        double payment = fc.calculateStopPayment(sps);
-        String msg = "Driver: " + sps.getDriver().getFirstName() + " " + sps.getDriver().getLastName()
-                + " Vehicle: " + sps.getVehicle().getIdentifier() + " Start time - " + sps.getStartDate()
-                + " Current payment - " + payment + " " + fc.getCurrency().getSymbol();
-        return msg;
+    public Viewable driverCheckStop(@FormParam("fname") String fname,
+                                    @FormParam("lname") String lname,
+                                    @FormParam("vehicle") String vid,
+                                    @Context HttpServletRequest request,
+                                    @Context HttpServletResponse response) throws InvalidInputException {
+        try {
+            if(!(stringValidator.isValid(fname) && stringValidator.isValid(lname) && stringValidator.isValid(vid))) throw new InvalidInputException("Invalid input data.");
+            SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
+            SingleParkingStop sps = spsDao.getParkingStop(vid, fname, lname);
+            FinancialCalculator fc = FinancialCalculator.getInstance();
+            double payment = fc.calculateStopPayment(sps);
+            request.setAttribute("sps", sps);
+            request.setAttribute("payment", payment);
+            request.setAttribute("symbol", fc.getCurrency().getSymbol());
+        } catch (InvalidInputException e) {
+            errors.add("Input data is invalid. The minimum text length is 2, maximum 50.");
+            request.setAttribute("error", errors);
+        } finally {
+            return new Viewable("/view/driver_check.jsp", null);
+        }
     }
 
     @POST
     @Path("operator_check.go")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Viewable operatorCheckStop(@NotNull @Size(min = 2, max = 50) @FormParam("vehicle") String vid,
-                                            @Context HttpServletRequest request,
-                                            @Context HttpServletResponse response) {
+    public Viewable operatorCheckStop(@FormParam("vehicle") String vid,
+                                      @Context HttpServletRequest request,
+                                      @Context HttpServletResponse response) throws InvalidInputException{
         request.setAttribute("vid", vid);
-        SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
-        SingleParkingStop sps = spsDao.getParkingStop(vid, true);
-        String msg;
-        if(sps != null)
-            msg = "Vehicle: " + sps.getVehicle().getIdentifier() + " has started parking meter from " + sps.getStartDate();
-        else
-            msg = "Vehicle: " + vid + " has not started parking meter";
-        request.setAttribute("sps", sps);
-        return new Viewable("/operator_check.jsp", null);
+        try {
+            if(!stringValidator.isValid(vid)) throw new InvalidInputException("Invalid input data.");
+            SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
+            SingleParkingStop sps = spsDao.getParkingStop(vid, true);
+            request.setAttribute("sps", sps);
+        } catch (InvalidInputException e) {
+            errors.add("Input data is invalid. The minimum text length is 2, maximum 50.");
+            request.setAttribute("error", errors);
+        } catch (NoRowException e)  {
+            errors.add("The vehicle: " + vid + " has not started meter");
+        } finally {
+            return new Viewable("/view/operator_check.jsp", null);
+        }
     }
 
     @POST
     @Path("owner_earnings.go")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.TEXT_PLAIN)
-    public String checkOwnerBrowser(@NotNull @FormParam("date") String date)   {
-        SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
-        List<SingleParkingStop> spsList = spsDao.getParkingStopsForDay(date);
-        FinancialCalculator fc = FinancialCalculator.getInstance();
-        double earnings = fc.calculateDayEarnings(spsList, date);
-        return "earnings: " + earnings;
+    public Viewable checkOwnerBrowser(@FormParam("date") String date,
+                                      @Context HttpServletRequest request,
+                                      @Context HttpServletResponse response) throws InvalidInputException{
+        try {
+            if(!dateValidator.isValid(date, "yyyy-MM-dd")) throw new InvalidInputException("Invalid date format from input");
+            SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
+            List<SingleParkingStop> spsList = spsDao.getParkingStopsForDay(date);
+            FinancialCalculator fc = FinancialCalculator.getInstance();
+            double earnings = fc.calculateDayEarnings(spsList, date);
+            request.setAttribute("date", date);
+            request.setAttribute("earnings", earnings);
+            request.setAttribute("symbol", fc.getCurrency().getSymbol());
+        } catch(InvalidInputException e) {
+            errors.add("Input date format is invalid. There is one acceptable format: yyyy-MM-dd.");
+            request.setAttribute("error", errors);
+        } finally {
+            return new Viewable("/view/owner_earnings.jsp", null);
+        }
     }
 
 }

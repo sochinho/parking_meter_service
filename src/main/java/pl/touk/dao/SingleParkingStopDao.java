@@ -101,7 +101,7 @@ public class SingleParkingStopDao {
         SingleParkingStop sps = null;
         try {
             ResultSet rs = con.createStatement().executeQuery(
-                    "select * from parking_stops where vehicle_identity='" + vid + "' and driver_fname='" + fname + "' and driver_lname='" + lname + "'");
+                    "select * from parking_stops where vehicle_identity='" + vid + "' and driver_fname='" + fname + "' and driver_lname='" + lname + "' order by start_date desc limit 1");
             if (rs.next()) {
                 Vehicle v = new Vehicle(rs.getString("vehicle_identity"));
                 Driver driver = new Driver("","");
@@ -127,7 +127,7 @@ public class SingleParkingStopDao {
         return sps;
     }
 
-    public SingleParkingStop getParkingStop(String vid, boolean started) {
+    public SingleParkingStop getParkingStop(String vid, boolean started) throws NoRowException{
         SingleParkingStop sps = null;
         try {
             ResultSet rs = con.createStatement().executeQuery(
@@ -147,6 +147,7 @@ public class SingleParkingStopDao {
                 if(rs.getString("started_meter") != null)
                     sps.setStarted(rs.getBoolean("started_meter"));
             }
+            else throw new NoRowException("No records in DB");
         } catch(SQLException e) {
             e.printStackTrace();
         } catch(ParseException e)	{
