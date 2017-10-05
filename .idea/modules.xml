@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/touk_parking_meter.iml" filepath="$PROJECT_DIR$/.idea/modules/touk_parking_meter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/touk_parking_meter_main.iml" filepath="$PROJECT_DIR$/.idea/modules/touk_parking_meter_main.iml" group="touk_parking_meter" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/touk_parking_meter_test.iml" filepath="$PROJECT_DIR$/.idea/modules/touk_parking_meter_test.iml" group="touk_parking_meter" />
+    </modules>
+  </component>
+</project>

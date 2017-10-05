@@ -1,0 +1,70 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <title>My first gradle project</title>
+</head>
+<body>
+
+<div class="header">
+  <h1>City parking meter</h1>
+</div>
+
+<div class="container">
+
+<div class="driver">
+<h1>Driver</h1>
+<h3>Start and stop parking meter.</h3>
+<form name="driver" method="post">
+
+    <p><label for="fname"><input name="fname" type="text" placeholder="First name"/></label></br></p>
+    <p><label for="lname"><input name="lname" type="text" placeholder="Last name"/></label></br></p>
+    <p><label for="vehicle"><input name="vehicle" placeholder="Vehicle ID"type="text"/></label></br></p>
+    <p><label for="radio"><input type="radio" name="gender" value="REGULAR" checked>REGULAR</label>
+    <label for="radio2"><input type="radio" name="gender" value="VIP">VIP</label></p>
+    <p><label for="submit"><input name="start" type="submit" value="Start" onclick="form.action='rest/parkings/start'"/>
+    <input name="stop" type="submit" value="Stop" onclick="form.action='rest/parkings/stop'"/></label>
+    <input name="check" type="submit" value="Check" onclick="form.action='rest/parkings/check'"/></p>
+
+</form>
+</div>
+
+<hr/>
+
+<div class="operator">
+<h1>Operator</h1>
+<h3>Check vehicle has started parking meter.</h3>
+<form name="driver" action="rest/create_user" method="post">
+
+    <label for="vehicle"><input name="vehicle" type="text" placeholder="Vehicle ID"/></label></br>
+    <label for="submit"><input name="check" type="submit" value="Check"/></label>
+
+</form>
+</div>
+
+<hr/>
+
+<div class="owner">
+<h1>Owner</h1>
+<h3>Check earned money for given day</h3>
+<form name="owner" action="rest/create_user" method="post">
+
+  <label for="password"><input name="date" type="date" placeholder="Select day"/></label></br>
+<!--     <label for="owner"><input name="owner" type="date" placeholder="Login"/></label></br>
+    <label for="password"><input name="password" type="password" placeholder="password"/></label></br> -->
+    <label for="submit"><input name="check" type="submit" value="Check"/></label>
+
+</form>
+</div>
+
+</div>
+
+<div class="footer">
+  <p>© 2017 Project developed by Bartłomiej Soczyński for Touk recruitment process.</p>
+</div>
+
+
+</body>
+</html>

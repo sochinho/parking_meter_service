@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="touk_parking_meter:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/touk_parking_meter_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="touk_parking_meter/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="touk_parking_meter" />
+        </element>
+      </element>
+      <element id="artifact" artifact-name="Gradle : touk_parking_meter : touk_parking_meter.war (exploded)" />
+    </root>
+  </artifact>
+</component>

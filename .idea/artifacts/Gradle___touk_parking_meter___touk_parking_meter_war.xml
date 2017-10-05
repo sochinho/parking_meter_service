@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Gradle : touk_parking_meter : touk_parking_meter.war">
+    <output-path>$PROJECT_DIR$/build/libs</output-path>
+    <properties id="gradle-properties">
+      <options external-project-path="$PROJECT_DIR$" />
+    </properties>
+    <root id="archive" name="touk_parking_meter.war">
+      <element id="artifact" artifact-name="Gradle : touk_parking_meter : touk_parking_meter.war (exploded)" />
+    </root>
+  </artifact>
+</component>

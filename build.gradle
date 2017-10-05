@@ -1,0 +1,55 @@
+group 'touk_parking_meter'
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse'
+
+ext.slf4jVersion = "1.7.7"
+ext.junitVersion = "4.12"
+ext.javaEEApiVersion = "7.0"
+
+configurations{ provided }
+
+repositories {
+    jcenter()
+    mavenLocal()
+}
+
+dependencies {
+    compile "javax.ws.rs:jsr311-api:1.1.1"
+    compile 'javax.servlet:javax.servlet-api:3.0.1'
+    compile 'javax.servlet:jstl:1.2'
+    compile 'javax.validation:validation-api:1.0.0.GA'
+
+    compile 'com.sun.jersey:jersey-server:1.13'
+    compile 'com.sun.jersey:jersey-core:1.13'
+    compile 'com.sun.jersey:jersey-servlet:1.13'
+    compile 'com.owlike:genson:0.99'
+
+    testCompile "junit:junit-dep:4.10"
+}
+
+eclipse {
+    classpath {
+        plusConfigurations += [configurations.provided]
+    }
+}
+
+task deploy(dependsOn: war, type: Copy) {
+    description 'Deploy all jars from build/libs directory to /webapps directory'
+
+    from('build/libs/' + project.name + '.war')
+    into(System.getenv('CATALINA_HOME') + '/webapps')
+}
+
+task undeploy(type: Delete) {
+    description 'Remove project jar from server /webapps directory'
+
+    delete System.getenv('CATALINA_HOME') + '/webapps/' + project.name + '.war'
+}
+
+task redeploy(dependsOn: [undeploy, deploy]) { description 'Redeploy project' }
+
+deploy.mustRunAfter undeploy
+
+sourceSets.main.compileClasspath += configurations.provided

@@ -1,0 +1,33 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Gradle : touk_parking_meter : touk_parking_meter.war (exploded)">
+    <output-path>$PROJECT_DIR$/build/libs/exploded/touk_parking_meter.war</output-path>
+    <properties id="gradle-properties">
+      <options external-project-path="$PROJECT_DIR$">
+        <manifest>TWFuaWZlc3QtVmVyc2lvbjogMS4wDQoNCg==</manifest>
+      </options>
+    </properties>
+    <root id="root">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/build/libs/exploded/touk_parking_meter.war/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="touk_parking_meter_main/web/Web Gradle : touk_parking_meter.war" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="touk_parking_meter_main" />
+          <element id="dir-copy" path="$PROJECT_DIR$/out/production/resources" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Gradle: javax.ws.rs:jsr311-api:1.1.1" />
+          <element id="library" level="project" name="Gradle: javax.servlet:javax.servlet-api:3.0.1" />
+          <element id="library" level="project" name="Gradle: javax.servlet:jstl:1.2" />
+          <element id="library" level="project" name="Gradle: com.sun.jersey:jersey-server:1.13" />
+          <element id="library" level="project" name="Gradle: com.sun.jersey:jersey-core:1.13" />
+          <element id="library" level="project" name="Gradle: com.sun.jersey:jersey-servlet:1.13" />
+          <element id="library" level="project" name="Gradle: com.owlike:genson:0.99" />
+          <element id="library" level="project" name="Gradle: asm:asm:3.1" />
+          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax.validation/validation-api/1.0.0.GA/b6bd7f9d78f6fdaa3c37dae18a4bd298915f328e/validation-api-1.0.0.GA.jar" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
