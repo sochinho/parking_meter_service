@@ -19,7 +19,7 @@
             Driver ${sps.driver.firstName} ${sps.driver.lastName} <br/>
             Vehicle ${sps.vehicle.identifier} <br/>
             Start time ${sps.startDate} <br/>
-            End time ${sps.endDate} <br/>
+            End time ${sps.stopDate} <br/>
             Payment ${payment} ${symbol} <br/>
         </p>
     </c:if>

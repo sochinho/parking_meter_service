@@ -3,7 +3,6 @@ package pl.touk;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,6 +62,9 @@ public class ParkingController {
                                @Context HttpServletRequest request,
                                @Context HttpServletResponse response) throws InvalidInputException {
         try {
+            fname = fname.trim();
+            lname = lname.trim();
+            vid = vid.trim();
             if(!(dataValidator.isValidNames(fname) && dataValidator.isValidNames(lname) && dataValidator.isValidVid(vid) && dataValidator.isValidType(tdriver))) throw new InvalidInputException("Invalid input data.");
             SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
             SingleParkingStop sps = new SingleParkingStop(new Driver(fname, lname, DriverType.valueOf(tdriver)), new Vehicle(vid));
@@ -71,13 +73,17 @@ public class ParkingController {
             request.setAttribute("sps", sps);
             return Response.status(200).entity(new Viewable("/view/start_meter.jsp", null)).build();
         } catch (InvalidInputException e)   {
-            errors.add("Input data is invalid. The minimum text length is 2, maximum 50.");
+            errors.add("Input data is invalid.");
             request.setAttribute("error", errors);
-            return Response.status(400).entity(new Viewable("/view/start_meter.jsp", null)).build();
+            return Response.status(422).entity(new Viewable("/view/start_meter.jsp", null)).build();
         } catch (DuplicateRowException e) {
             errors.add("The driver: " + fname + " " + lname + " with vehicle " + vid + " has already started parking meter.");
             request.setAttribute("error", errors);
             return Response.status(400).entity(new Viewable("/view/start_meter.jsp", null)).build();
+        } catch(NullPointerException e) {
+            errors.add("Input data cannot be null.");
+            request.setAttribute("error", errors);
+            return Response.status(422).entity(new Viewable("/view/start_meter.jsp", null)).build();
         }
     }
 
@@ -90,6 +96,9 @@ public class ParkingController {
                               @Context HttpServletRequest request,
                               @Context HttpServletResponse response) throws InvalidInputException {
         try {
+            fname = fname.trim();
+            lname = lname.trim();
+            vid = vid.trim();
             if(!(dataValidator.isValidNames(fname) && dataValidator.isValidNames(lname) && dataValidator.isValidVid(vid))) throw new InvalidInputException("Invalid input data.");
             SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
             SingleParkingStop sps = null;
@@ -101,13 +110,17 @@ public class ParkingController {
             request.setAttribute("symbol", fc.getCurrency().getSymbol());
             return Response.status(200).entity(new Viewable("/view/stop_meter.jsp", null)).build();
         } catch (InvalidInputException e)   {
-            errors.add("Input data is invalid. The minimum text length is 2, maximum 50.");
+            errors.add("Input data is invalid.");
             request.setAttribute("error", errors);
-            return Response.status(400).entity(new Viewable("/view/stop_meter.jsp", null)).build();
+            return Response.status(422).entity(new Viewable("/view/stop_meter.jsp", null)).build();
         } catch(NoRowException e) {
             errors.add("The driver: " + fname + " " + lname + " with vehicle " + vid + " has not started parking meter");
             request.setAttribute("error", errors);
             return Response.status(400).entity(new Viewable("/view/stop_meter.jsp", null)).build();
+        } catch(NullPointerException e) {
+            errors.add("Input data cannot be null.");
+            request.setAttribute("error", errors);
+            return Response.status(422).entity(new Viewable("/view/start_meter.jsp", null)).build();
         }
     }
 
@@ -121,6 +134,9 @@ public class ParkingController {
                                     @Context HttpServletRequest request,
                                     @Context HttpServletResponse response) throws InvalidInputException {
         try {
+            fname = fname.trim();
+            lname = lname.trim();
+            vid = vid.trim();
             if(!(dataValidator.isValidNames(fname) && dataValidator.isValidNames(lname) && dataValidator.isValidVid(vid))) throw new InvalidInputException("Invalid input data.");
             SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
             FinancialCalculator fc = FinancialCalculator.getInstance();
@@ -133,11 +149,15 @@ public class ParkingController {
         } catch (InvalidInputException e) {
             errors.add("Input data is invalid.");
             request.setAttribute("error", errors);
-            return Response.status(400).entity(new Viewable("/view/driver_check.jsp", null)).build();
+            return Response.status(422).entity(new Viewable("/view/driver_check.jsp", null)).build();
         } catch (NoRowException e) {
             errors.add("The driver: " + fname + " " + lname + " with vehicle " + vid + " does not exist.");
             request.setAttribute("error", errors);
             return Response.status(400).entity(new Viewable("/view/driver_check.jsp", null)).build();
+        } catch(NullPointerException e) {
+            errors.add("Input data cannot be null.");
+            request.setAttribute("error", errors);
+            return Response.status(422).entity(new Viewable("/view/start_meter.jsp", null)).build();
         }
     }
 
@@ -147,9 +167,10 @@ public class ParkingController {
     public Response operatorCheckStop(@FormParam("vehicle") String vid,
                                       @Context HttpServletRequest request,
                                       @Context HttpServletResponse response) throws InvalidInputException{
-        request.setAttribute("vid", vid);
         try {
-            if(!dataValidator.isValidVid(vid)) throw new InvalidInputException("Invalid input data.");
+            vid = vid.trim();
+            request.setAttribute("vid", vid);
+            if(!(dataValidator.isValidVid(vid))) throw new InvalidInputException("Invalid input data.");
             SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
             SingleParkingStop sps = spsDao.getParkingStop(vid, true);
             request.setAttribute("sps", sps);
@@ -157,11 +178,15 @@ public class ParkingController {
         } catch (InvalidInputException e) {
             errors.add("Input data is invalid.");
             request.setAttribute("error", errors);
-            return Response.status(400).entity(new Viewable("/view/operator_check.jsp", null)).build();
+            return Response.status(422).entity(new Viewable("/view/operator_check.jsp", null)).build();
         } catch (NoRowException e)  {
             errors.add("The vehicle: " + vid + " has not started meter");
             request.setAttribute("error", errors);
             return Response.status(400).entity(new Viewable("/view/operator_check.jsp", null)).build();
+        } catch(NullPointerException e) {
+            errors.add("Input data cannot be null.");
+            request.setAttribute("error", errors);
+            return Response.status(422).entity(new Viewable("/view/start_meter.jsp", null)).build();
         }
     }
 
@@ -172,6 +197,7 @@ public class ParkingController {
                                       @Context HttpServletRequest request,
                                       @Context HttpServletResponse response) throws InvalidInputException{
         try {
+            date = date.trim();
             if(!dataValidator.isValidDate(date, "yyyy-MM-dd")) throw new InvalidInputException("Invalid date format from input");
             SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
             List<SingleParkingStop> spsList = spsDao.getParkingStopsForDay(date);
@@ -184,7 +210,11 @@ public class ParkingController {
         } catch(InvalidInputException e) {
             errors.add("Input date format is invalid. There is one acceptable date format: yyyy-MM-dd.");
             request.setAttribute("error", errors);
-            return Response.status(400).entity(new Viewable("/view/owner_earnings.jsp", null)).build();
+            return Response.status(422).entity(new Viewable("/view/owner_earnings.jsp", null)).build();
+        } catch(NullPointerException e) {
+            errors.add("Input date cannot be null.");
+            request.setAttribute("error", errors);
+            return Response.status(422).entity(new Viewable("/view/start_meter.jsp", null)).build();
         }
     }
 

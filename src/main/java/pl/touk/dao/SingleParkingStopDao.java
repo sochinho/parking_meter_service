@@ -51,7 +51,7 @@ public class SingleParkingStopDao {
                 Driver d = new Driver("","");
                 Vehicle v = new Vehicle(rs.getString("vehicle_identity"));
                 SingleParkingStop sps = new SingleParkingStop(d, v);
-                DateFormat df = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.SSS");
+                DateFormat df = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss.SSS");
                 if(rs.getString("start_date") != null)
                     sps.setStartDate(df.parse(rs.getString("start_date")));
                 if(rs.getString("end_date") != null)
@@ -79,7 +79,7 @@ public class SingleParkingStopDao {
                 Driver d = new Driver("Przykladowy","Driver", DriverType.REGULAR);
                 Vehicle v = new Vehicle(rs.getString("vehicle_identity"));
                 sps = new SingleParkingStop(d, v);
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                 if(rs.getString("start_date") != null)
                     sps.setStartDate(df.parse(rs.getString("start_date")));
                 if(rs.getString("end_date") != null)
@@ -111,7 +111,7 @@ public class SingleParkingStopDao {
                 }
                 driver.setType(DriverType.values()[rs.getInt("driver_type")]);
                 sps = new SingleParkingStop(driver, v);
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                 if(rs.getString("start_date") != null)
                     sps.setStartDate(df.parse(rs.getString("start_date")));
                 if(rs.getString("end_date") != null)
@@ -134,7 +134,7 @@ public class SingleParkingStopDao {
             ResultSet rs = con.createStatement().executeQuery(
                     "select * from parking_stops where vehicle_identity='" + vid + "' and started_meter=" + started);
             if(rs.next())   {
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HHmm:ss.SSS");
                 Vehicle v = new Vehicle(rs.getString("vehicle_identity"));
                 sps = new SingleParkingStop(new Driver("", ""), v);
                 if(rs.getString("start_date") != null)
@@ -168,7 +168,7 @@ public class SingleParkingStopDao {
                     "select * from parking_stops where start_date < " + start_date + " and end_date > " + end_date + " " +
                             "union select * from parking_stops where start_date < " + start_date + " and end_date is null and started_meter=true");
             while(rs.next())    {
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                 Vehicle v = new Vehicle(rs.getString("vehicle_identity"));
                 Driver driver = new Driver("", "");
                 if((rs.getString("driver_fname") != null) && (rs.getString("driver_lname") != null)) {
@@ -220,7 +220,7 @@ public class SingleParkingStopDao {
 
     public SingleParkingStop stopParkingStop(String vid, String fname, String lname) throws NoRowException{
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         SingleParkingStop sps = new SingleParkingStop(new Driver(fname, lname), new Vehicle(vid));
         if(!checkParkingStopStarted(sps)) throw new NoRowException("No records in DB");
         try	{
