@@ -8,11 +8,20 @@
 <%@include file="../includes/header.jsp" %>
 
 <c:if test="${not empty error}">
-    Error: ${error}
+    <p class="error">
+        Error: ${error}
+    </p>
 </c:if>
-<c:if test="${empty errors}">
+<c:if test="${empty error}">
     <c:if test="${not empty sps}">
-        Udalo sie zaczac
+        <p class="info">
+            Parking meter has been stopped <br/>
+            Driver ${sps.driver.firstName} ${sps.driver.lastName} <br/>
+            Vehicle ${sps.vehicle.identifier} <br/>
+            Start time ${sps.startDate} <br/>
+            End time ${sps.endDate} <br/>
+            Payment ${payment} ${symbol} <br/>
+        </p>
     </c:if>
     <c:if test="${empty sps}">
         Something was wrong. Try again.

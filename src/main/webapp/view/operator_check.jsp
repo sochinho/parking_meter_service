@@ -9,10 +9,14 @@
 <%@include file="../includes/header.jsp" %>
 
 <c:if test="${not empty sps}">
-    Vehicle: ${sps.vehicle.identifier} has started parking meter from ${sps.startDate}
+    <p class="info">
+        Vehicle: ${sps.vehicle.identifier} has started parking meter from ${sps.startDate}
+    </p>
 </c:if>
 <c:if test="${empty sps}">
-    Vehicle: ${vid} has not started parking meter
+    <p class="info">
+        Vehicle: ${vid} has not started parking meter
+    </p>
 </c:if>
 
 <%@include file="../includes/footer.jsp" %>

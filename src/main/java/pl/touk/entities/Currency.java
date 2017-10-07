@@ -23,8 +23,8 @@ public class Currency {
         return symbol;
     }
 
-    public double getMoney(double m)	{
-        return m * coefficient;
+    public BigDecimal getMoney(double m)	{
+        return new BigDecimal(m * coefficient).setScale(2, BigDecimal.ROUND_UP);
     }
 
 

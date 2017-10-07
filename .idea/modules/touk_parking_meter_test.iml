@@ -14,13 +14,17 @@
     <orderEntry type="library" name="Gradle: javax.servlet:javax.servlet-api:3.0.1" level="project" />
     <orderEntry type="library" name="Gradle: javax.servlet:jstl:1.2" level="project" />
     <orderEntry type="library" name="Gradle: javax.validation:validation-api:1.0.0.GA" level="project" />
-    <orderEntry type="library" name="Gradle: com.sun.jersey:jersey-server:1.13" level="project" />
-    <orderEntry type="library" name="Gradle: com.sun.jersey:jersey-core:1.13" level="project" />
-    <orderEntry type="library" name="Gradle: com.sun.jersey:jersey-servlet:1.13" level="project" />
     <orderEntry type="library" name="Gradle: com.owlike:genson:0.99" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.sun.jersey.jersey-test-framework:jersey-test-framework-core:1.19.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.sun.jersey.jersey-test-framework:jersey-test-framework-external:1.19.4" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit-dep:4.10" level="project" />
-    <orderEntry type="library" name="Gradle: asm:asm:3.1" level="project" />
+    <orderEntry type="library" name="Gradle: junit:junit:4.8.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.sun.jersey:jersey-client:1.19.4" level="project" />
     <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.sun.jersey:jersey-servlet:1.19.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.sun.jersey:jersey-core:1.19.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.sun.jersey:jersey-server:1.19.4" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="touk_parking_meter_main" />
 </module>

@@ -2,7 +2,7 @@
   Created by IntelliJ IDEA.
   User: sochinho
   Date: 05.10.2017
-  Time: 02:28
+  Time: 15:16
   To change this template use File | Settings | File Templates.
 --%>
 <%@include file="../includes/header.jsp" %>
@@ -13,15 +13,12 @@
     </p>
 </c:if>
 <c:if test="${empty errors}">
-    <c:if test="${not empty sps}">
+    <c:if test="${not empty date}">
         <p class="info">
-            Parking meter started. <br/>
-            Driver: ${sps.driver.firstName} ${sps.driver.lastName} <br/>
-            Vehicle: ${sps.vehicle.identifier} <br/>
-            Start time: ${sps.startDate} <br/>
+            The parking during ${date} earned ${earnings} ${symbol}
         </p>
     </c:if>
-    <c:if test="${empty sps}">
+    <c:if test="${empty date}">
         <p class="error">
             Something was wrong. Try again.
         </p>

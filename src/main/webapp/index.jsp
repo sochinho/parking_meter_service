@@ -44,7 +44,7 @@
         <h3>Check earned money for given day</h3>
         <form name="owner" action="rest/parkings/owner_earnings.go" method="post">
 
-            <label for="password"><input name="date" type="date" placeholder="Select day"/></label></br>
+            <label for="date"><input name="date" type="date" placeholder="Select day"/></label></br>
             <label for="submit"><input name="check" type="submit" value="Check"/></label>
 
         </form>

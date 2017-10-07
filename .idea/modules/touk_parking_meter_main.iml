@@ -29,6 +29,7 @@
     <orderEntry type="library" name="Gradle: com.sun.jersey:jersey-core:1.13" level="project" />
     <orderEntry type="library" name="Gradle: com.sun.jersey:jersey-servlet:1.13" level="project" />
     <orderEntry type="library" name="Gradle: com.owlike:genson:0.99" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.0" level="project" />
     <orderEntry type="library" name="Gradle: asm:asm:3.1" level="project" />
   </component>
 </module>

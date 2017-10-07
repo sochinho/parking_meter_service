@@ -1,5 +1,6 @@
 package pl.touk.utilis;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Logger;
@@ -36,9 +37,10 @@ public class FinancialCalculator {
         return c;
     }
 
-    public double calculateStopPayment(SingleParkingStop sps)	{
+    public BigDecimal calculateStopPayment(SingleParkingStop sps)	{
         Date start;
         Date end;
+        BigDecimal result = new BigDecimal(0);
         double payment = 0.00;
         if(sps != null)
             if(sps.getStartDate() != null)	{
@@ -67,17 +69,17 @@ public class FinancialCalculator {
                         nextHourMultiplier = 2.0;
                     }
                     if(hours > 0)   payment = startRate*(1-Math.pow(nextHourMultiplier,hours))/(1-nextHourMultiplier);
-					payment = c.getMoney(payment);
+					result = c.getMoney(payment);
                 } catch(ParseException e)	{
                     e.printStackTrace();
                 }
 
             }
-        return payment;
+        return result;
     }
 
-    public double calculateDayEarnings(List<SingleParkingStop> spsList, String date)    {
-        double dayEarnings = 0.00;
+    public BigDecimal calculateDayEarnings(List<SingleParkingStop> spsList, String date)    {
+        BigDecimal dayEarnings = new BigDecimal(0.00);
         try {
             Calendar calendar = Calendar.getInstance();
             Date startDay = new SimpleDateFormat("yyyy-MM-dd").parse(date);
@@ -107,7 +109,7 @@ public class FinancialCalculator {
                 }
                 if(hours > 0)   payment = startRate*(1-Math.pow(nextHourMultiplier,hours))/(1-nextHourMultiplier);
                 log.info(this.getClass().getName() + " calculateDayEarnings, payment - " + payment);
-                dayEarnings += c.getMoney(payment);
+                dayEarnings = dayEarnings.add(c.getMoney(payment));
             }
         } catch(ParseException e)   {
             e.printStackTrace();

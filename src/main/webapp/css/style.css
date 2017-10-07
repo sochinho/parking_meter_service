@@ -136,6 +136,20 @@ input[type=text]:focus, input[type=date]:focus  {
 	font-style: italic;
 }
 
+.container .info, .error {
+  text-align: center;
+  font-size: 30px;
+  margin-top: 70px;
+}
+
+.container .info {
+  color: #fff;
+}
+
+.container .error {
+  color: #b30000;
+}
+
 .driver p, .operator p, .owner p {
   margin: 20px 0 0;
   font-size: 13px;
@@ -188,7 +202,9 @@ input[type=text]:focus, input[type=date]:focus  {
 
 .footer {
 	position:absolute;
-	margin: 30px 0 0 0;
+	right: 0;
+  bottom: 0;
+  left: 0;
 	text-align: center;
 	border-top-color: #26c3f2; 
 	border-top-style: solid;

@@ -97,7 +97,7 @@ public class SingleParkingStopDao {
         return sps;
     }
 
-    public SingleParkingStop getParkingStop(String vid, String fname, String lname) {
+    public SingleParkingStop getParkingStop(String vid, String fname, String lname) throws NoRowException{
         SingleParkingStop sps = null;
         try {
             ResultSet rs = con.createStatement().executeQuery(
@@ -119,6 +119,7 @@ public class SingleParkingStopDao {
                 if(rs.getString("started_meter") != null)
                     sps.setStarted(rs.getBoolean("started_meter"));
             }
+            else throw new NoRowException("No records in DB");
         } catch (SQLException e) {
             e.printStackTrace();
         } catch(ParseException e)	{
