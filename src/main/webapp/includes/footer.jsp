@@ -8,7 +8,7 @@
 </div>
 
 <div class="footer">
-    <p>© 2017 Project developed by Bartlomiej Soczynski for Touk recruitment process.</p>
+    <p>2017 Project developed by Bartlomiej Soczynski for Touk recruitment process.</p>
 </div>
 
 

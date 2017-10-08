@@ -180,9 +180,7 @@ public class ParkingController {
             request.setAttribute("error", errors);
             return Response.status(422).entity(new Viewable("/view/operator_check.jsp", null)).build();
         } catch (NoRowException e)  {
-            errors.add("The vehicle: " + vid + " has not started meter");
-            request.setAttribute("error", errors);
-            return Response.status(400).entity(new Viewable("/view/operator_check.jsp", null)).build();
+            return Response.status(200).entity(new Viewable("/view/operator_check.jsp", null)).build();
         } catch(NullPointerException e) {
             errors.add("Input data cannot be null.");
             request.setAttribute("error", errors);

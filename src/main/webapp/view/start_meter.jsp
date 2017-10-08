@@ -12,7 +12,7 @@
         Error: ${error}
     </p>
 </c:if>
-<c:if test="${empty errors}">
+<c:if test="${empty error}">
     <c:if test="${not empty sps}">
         <p class="info">
             Parking meter started. <br/>
