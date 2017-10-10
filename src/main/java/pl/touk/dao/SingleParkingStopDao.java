@@ -26,25 +26,22 @@ public class SingleParkingStopDao {
 
     private static Logger log;
 
-    private Connection con;
     final static String NAMING_CONTEXT = "java:/comp/env/jdbc/parking_meter";
 
-    private static SingleParkingStopDao instance = null;
+    private static SingleParkingStopDao instance = new SingleParkingStopDao();
 
     private SingleParkingStopDao()	{
         super();
-        con = getConnection();
         log = Logger.getLogger(this.getClass().getName());
     }
 
     public static SingleParkingStopDao getInstance()	{
-        if(instance == null)	instance = new SingleParkingStopDao();
         return instance;
     }
 
     public ArrayList<SingleParkingStop> getParkingAllStops() {
         ArrayList<SingleParkingStop> spsList = new ArrayList<SingleParkingStop>();
-        try {
+        try(Connection con = getConnection()) {
             ResultSet rs = con.createStatement().executeQuery(
                     "select * from parking_stops");
             while (rs.next()) {
@@ -57,7 +54,6 @@ public class SingleParkingStopDao {
                 if(rs.getString("end_date") != null)
                     sps.setStopDate(df.parse(rs.getString("end_date")));
                 if((rs.getString("driver_fname") != null) && (rs.getString("driver_lname") != null)) {
-                    DriverType dt = rs.getInt("driver_type") == 1 ? DriverType.VIP : DriverType.REGULAR;
                     d.setFirstName(rs.getString("driver_fname"));
                     d.setLastName(rs.getString("driver_lname"));
                     d.setType(rs.getInt("driver_type") == 1 ? DriverType.VIP : DriverType.REGULAR);
@@ -75,7 +71,7 @@ public class SingleParkingStopDao {
 
     public SingleParkingStop getParkingStopById(int idp) {
         SingleParkingStop sps = null;
-        try {
+        try(Connection con = getConnection()) {
             ResultSet rs = con.createStatement().executeQuery(
                     "select * from parking_stops where idp=" + idp);
             if (rs.next()) {
@@ -104,7 +100,7 @@ public class SingleParkingStopDao {
 
     public SingleParkingStop getParkingStop(String vid, String fname, String lname) throws NoRowException{
         SingleParkingStop sps = null;
-        try {
+        try(Connection con = getConnection()) {
             ResultSet rs = con.createStatement().executeQuery(
                     "select * from parking_stops where vehicle_identity='" + vid + "' and driver_fname='" + fname + "' and driver_lname='" + lname + "' order by start_date desc limit 1");
             if (rs.next()) {
@@ -135,7 +131,7 @@ public class SingleParkingStopDao {
 
     public SingleParkingStop getParkingStop(String vid, boolean started) throws NoRowException{
         SingleParkingStop sps = null;
-        try {
+        try(Connection con = getConnection()) {
             ResultSet rs = con.createStatement().executeQuery(
                     "select * from parking_stops where vehicle_identity='" + vid + "' and started_meter=" + started);
             if(rs.next())   {
@@ -168,7 +164,7 @@ public class SingleParkingStopDao {
     public List<SingleParkingStop> getParkingStopsForDay(String date) {
         log.info(this.getClass().getName() + " - getParkingStopsForDay, date " + date);
         List<SingleParkingStop> spsList = new ArrayList<SingleParkingStop>();
-        try {
+        try(Connection con = getConnection()) {
             String formattedDate = new SimpleDateFormat("yyyy/MM/dd").format(new SimpleDateFormat("yyyy-MM-dd").parse(date));
             String start_date = "TO_TIMESTAMP('" + formattedDate + " 23:59', 'YYYY/MM/DD HH:MI')";
             String end_date = "TO_TIMESTAMP('" + formattedDate + " 00:00', 'YYYY/MM/DD HH:MI')";
@@ -205,7 +201,7 @@ public class SingleParkingStopDao {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
         if(checkParkingStopStarted(sps)) throw new DuplicateRowException("Record already exists in DB");
-        try	{
+        try(Connection con = getConnection())	{
             String vid  = sps.getVehicle().getIdentifier();
             String start_date = "NULL", end_date = "NULL", fname = "NULL", lname = "NULL";
             if(sps.getStartDate() != null)
@@ -231,7 +227,7 @@ public class SingleParkingStopDao {
         DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         SingleParkingStop sps = new SingleParkingStop(new Driver(fname, lname), new Vehicle(vid));
         if(!checkParkingStopStarted(sps)) throw new NoRowException("No records in DB");
-        try	{
+        try(Connection con = getConnection())	{
             ResultSet rs = con.createStatement().executeQuery(
                     "select idp from parking_stops where vehicle_identity='" + vid + "' and driver_fname='" + fname + "' and driver_lname='" + lname + "' and started_meter=true order by start_date desc limit 1");
             if (rs.next()) {
@@ -256,7 +252,7 @@ public class SingleParkingStopDao {
     }
 
     private boolean checkParkingStopStarted(SingleParkingStop sps)  {
-        try {
+        try(Connection con = getConnection()) {
             String vid  = sps.getVehicle().getIdentifier();
             String fname = "NULL", lname = "NULL";
             if(sps.getDriver().getFirstName() != null)	fname = sps.getDriver().getFirstName();

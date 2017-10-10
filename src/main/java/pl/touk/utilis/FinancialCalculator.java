@@ -18,12 +18,12 @@ public class FinancialCalculator {
 
     private static Logger log;
 
-    private static Currency c;
+    private static Currency currency;
     private static SimpleDateFormat sf;
     private static FinancialCalculator instance = null;
 
     private FinancialCalculator()	{
-        c = new Zloty();
+        currency = new Zloty();
         sf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         log = Logger.getLogger(this.getClass().getName());
     }
@@ -34,7 +34,7 @@ public class FinancialCalculator {
     }
 
     public static Currency getCurrency()	{
-        return c;
+        return currency;
     }
 
     public BigDecimal calculateStopPayment(SingleParkingStop sps)	{
@@ -69,7 +69,7 @@ public class FinancialCalculator {
                         nextHourMultiplier = 2.0;
                     }
                     if(hours > 0)   payment = startRate*(1-Math.pow(nextHourMultiplier,hours))/(1-nextHourMultiplier);
-					result = c.getMoney(payment);
+					result = currency.getMoney(payment);
                 } catch(ParseException e)	{
                     e.printStackTrace();
                 }
@@ -109,7 +109,7 @@ public class FinancialCalculator {
                 }
                 if(hours > 0)   payment = startRate*(1-Math.pow(nextHourMultiplier,hours))/(1-nextHourMultiplier);
                 log.info(this.getClass().getName() + " calculateDayEarnings, payment - " + payment);
-                dayEarnings = dayEarnings.add(c.getMoney(payment));
+                dayEarnings = dayEarnings.add(currency.getMoney(payment));
             }
         } catch(ParseException e)   {
             e.printStackTrace();

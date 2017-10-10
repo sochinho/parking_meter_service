@@ -34,7 +34,7 @@ public class ParkingController {
     @Context
     UriInfo uriInfo;
 
-    InputDataValidator dataValidator= InputDataValidator.getInstance();
+    InputDataValidator dataValidator = InputDataValidator.getInstance();
     List<String> errors = new ArrayList<String>();
 
     @GET
@@ -65,7 +65,7 @@ public class ParkingController {
             fname = fname.trim();
             lname = lname.trim();
             vid = vid.trim();
-            if(!(dataValidator.isValidNames(fname) && dataValidator.isValidNames(lname) && dataValidator.isValidVid(vid) && dataValidator.isValidType(tdriver))) throw new InvalidInputException("Invalid input data.");
+            if(!(dataValidator.isValidDriverFormInput(fname, lname, vid, tdriver))) throw new InvalidInputException("Invalid input data.");
             SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
             SingleParkingStop sps = new SingleParkingStop(new Driver(fname, lname, DriverType.valueOf(tdriver)), new Vehicle(vid));
             sps.startMeter();
@@ -99,12 +99,14 @@ public class ParkingController {
             fname = fname.trim();
             lname = lname.trim();
             vid = vid.trim();
-            if(!(dataValidator.isValidNames(fname) && dataValidator.isValidNames(lname) && dataValidator.isValidVid(vid))) throw new InvalidInputException("Invalid input data.");
+            if(!(dataValidator.isValidDriverFormInput(fname, lname, vid)))
+                throw new InvalidInputException("Invalid input data.");
+
             SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
-            SingleParkingStop sps = null;
-            sps = spsDao.stopParkingStop(vid, fname, lname);
             FinancialCalculator fc = FinancialCalculator.getInstance();
+            SingleParkingStop sps = spsDao.stopParkingStop(vid, fname, lname);
             BigDecimal payment = fc.calculateStopPayment(sps);
+
             request.setAttribute("sps", sps);
             request.setAttribute("payment", payment);
             request.setAttribute("symbol", fc.getCurrency().getSymbol());
@@ -137,11 +139,14 @@ public class ParkingController {
             fname = fname.trim();
             lname = lname.trim();
             vid = vid.trim();
-            if(!(dataValidator.isValidNames(fname) && dataValidator.isValidNames(lname) && dataValidator.isValidVid(vid))) throw new InvalidInputException("Invalid input data.");
+            if(!(dataValidator.isValidDriverFormInput(fname, lname, vid)))
+                throw new InvalidInputException("Invalid input data.");
+
             SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
             FinancialCalculator fc = FinancialCalculator.getInstance();
             SingleParkingStop sps = spsDao.getParkingStop(vid, fname, lname);
             BigDecimal payment = fc.calculateStopPayment(sps);
+
             request.setAttribute("sps", sps);
             request.setAttribute("payment", payment);
             request.setAttribute("symbol", fc.getCurrency().getSymbol());
@@ -170,9 +175,12 @@ public class ParkingController {
         try {
             vid = vid.trim();
             request.setAttribute("vid", vid);
-            if(!(dataValidator.isValidVid(vid))) throw new InvalidInputException("Invalid input data.");
+            if(!(dataValidator.isValidVid(vid)))
+                throw new InvalidInputException("Invalid input data.");
+
             SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
             SingleParkingStop sps = spsDao.getParkingStop(vid, true);
+
             request.setAttribute("sps", sps);
             return Response.status(200).entity(new Viewable("/view/operator_check.jsp", null)).build();
         } catch (InvalidInputException e) {
@@ -196,11 +204,13 @@ public class ParkingController {
                                       @Context HttpServletResponse response) throws InvalidInputException{
         try {
             date = date.trim();
-            if(!dataValidator.isValidDate(date, "yyyy-MM-dd")) throw new InvalidInputException("Invalid date format from input");
+            if(!dataValidator.isValidDate(date, "yyyy-MM-dd"))
+                throw new InvalidInputException("Invalid date format from input");
             SingleParkingStopDao spsDao = SingleParkingStopDao.getInstance();
-            List<SingleParkingStop> spsList = spsDao.getParkingStopsForDay(date);
             FinancialCalculator fc = FinancialCalculator.getInstance();
+            List<SingleParkingStop> spsList = spsDao.getParkingStopsForDay(date);
             BigDecimal earnings = fc.calculateDayEarnings(spsList, date);
+
             request.setAttribute("date", date);
             request.setAttribute("earnings", earnings);
             request.setAttribute("symbol", fc.getCurrency().getSymbol());

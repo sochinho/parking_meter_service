@@ -8,13 +8,20 @@ import java.util.Date;
 
 public class InputDataValidator {
 
-    private static InputDataValidator instance = null;
+    private static InputDataValidator instance = new InputDataValidator();
 
     private InputDataValidator() {}
 
     public static InputDataValidator getInstance()   {
-        if(instance == null)    instance = new InputDataValidator();
         return instance;
+    }
+
+    public boolean isValidDriverFormInput(String fname, String lname, String vid)   {
+        return isValidNames(fname) && isValidNames(lname) && isValidVid(vid);
+    }
+
+    public boolean isValidDriverFormInput(String fname, String lname, String vid, String tdriver)   {
+        return isValidNames(fname) && isValidNames(lname) && isValidVid(vid) && isValidType(tdriver);
     }
 
     public boolean isValidNames(String name)    {
