@@ -26,8 +26,11 @@ public class InputDataValidator {
 
     public boolean isValidNames(String name)    {
 
+
         if(name == null)
             return false;
+
+        name = name.trim();
 
         if(name.length() < 2)  {
             return false;
@@ -43,8 +46,11 @@ public class InputDataValidator {
 
     public boolean isValidVid(String vid)    {
 
+
         if(vid == null)
             return false;
+
+        vid = vid.trim();
 
         if(vid.length() < 3)  {
             return false;
@@ -67,7 +73,7 @@ public class InputDataValidator {
         sf.setLenient(false);
 
         try {
-            Date d = sf.parse(date);
+            sf.parse(date);
         } catch (ParseException e) {
             return false;
         }

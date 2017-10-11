@@ -45,12 +45,6 @@ public class ParkingControllerTest extends JerseyTest {
     }
 
     @Test
-    public void testGetAllStops()   {
-        assertNotNull("SingleParkingStop list return", controllerResource.path("/parkings").get(List.class));
-        assertEquals(200, controllerResource.path("/parkings").get(ClientResponse.class).getStatus());
-    }
-
-    @Test
     public void testNullDataStartMeter()   {
         MultivaluedMap formData = new MultivaluedMapImpl();
         assertEquals(422, controllerResource.path("/parkings/start_meter.go").type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class, formData).getStatus());

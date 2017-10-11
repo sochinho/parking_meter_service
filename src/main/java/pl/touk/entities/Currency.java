@@ -7,12 +7,12 @@ public class Currency {
     protected String name;
     protected String symbol;
 
-    protected double coefficient;
+    protected BigDecimal coefficient;
 
     protected Currency()	{
         name = "";
         symbol = "";
-        coefficient = 1.00;
+        coefficient = new BigDecimal(1.00);
     }
 
     public String getName()	{
@@ -23,8 +23,8 @@ public class Currency {
         return symbol;
     }
 
-    public BigDecimal getMoney(double m)	{
-        return new BigDecimal(m * coefficient).setScale(2, BigDecimal.ROUND_UP);
+    public BigDecimal getMoney(BigDecimal m)	{
+        return m.multiply(coefficient).setScale(2, BigDecimal.ROUND_UP);
     }
 
 
