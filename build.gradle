@@ -38,6 +38,14 @@ eclipse {
     }
 }
 
+war {
+    doFirst {
+        manifest {
+            attributes("Implementation-Title": project.name, "Implementation-Version": version, "Implementation-Timestamp": new Date())
+        }
+    }
+}
+
 task deploy(dependsOn: war, type: Copy) {
     description 'Deploy all jars from build/libs directory to /webapps directory'
 

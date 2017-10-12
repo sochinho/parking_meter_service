@@ -42,11 +42,14 @@ public class SingleParkingStopDao {
 
     public SingleParkingStop getParkingStop(String vid, String fname, String lname) throws NoRowException, InternalServerException{
         SingleParkingStop sps = null;
-        try(Connection con = getConnection()) {
+        try(Connection con = getConnection();
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery(
+                "select * from parking_stops where vehicle_identity='" + vid + "' and driver_fname='" + fname + "' and driver_lname='" + lname + "' order by start_date desc limit 1"))
+        {
             if(con == null)
                 throw new JdbcConnectException("Cannot connect to JDBC database");
-            ResultSet rs = con.createStatement().executeQuery(
-                    "select * from parking_stops where vehicle_identity='" + vid + "' and driver_fname='" + fname + "' and driver_lname='" + lname + "' order by start_date desc limit 1");
+
             if (rs.next()) {
                 Vehicle v = new Vehicle(rs.getString("vehicle_identity"));
                 Driver d = new Driver("","");
@@ -79,11 +82,14 @@ public class SingleParkingStopDao {
 
     public SingleParkingStop getParkingStop(String vid, boolean started) throws NoRowException, InternalServerException{
         SingleParkingStop sps = null;
-        try(Connection con = getConnection()) {
+        try(Connection con = getConnection();
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery(
+                "select * from parking_stops where vehicle_identity='" + vid + "' and started_meter=" + started))
+        {
             if(con == null)
                 throw new JdbcConnectException("Cannot connect to JDBC database");
-            ResultSet rs = con.createStatement().executeQuery(
-                    "select * from parking_stops where vehicle_identity='" + vid + "' and started_meter=" + started);
+
             if(rs.next())   {
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                 Vehicle v = new Vehicle(rs.getString("vehicle_identity"));
@@ -111,8 +117,6 @@ public class SingleParkingStopDao {
             throw new InternalServerException("Parsing date problem");
         } catch (NamingException e) {
             throw new InternalServerException("Problem with getting JDBC resource");
-        } catch (NoRowException e) {
-            throw e;
         }
         return sps;
     }
@@ -131,7 +135,8 @@ public class SingleParkingStopDao {
         }
 
         try(Connection con = getConnection();
-            ResultSet rs = con.createStatement().executeQuery(
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery(
                     "select * from parking_stops where start_date < " + start_date + " and end_date > " + end_date + " " +
                         "union select * from parking_stops where start_date < " + start_date + " and end_date is null and started_meter=true"))
         {
@@ -228,8 +233,6 @@ public class SingleParkingStopDao {
             throw new InternalServerException("Problem with connecting to JDBC database");
         } catch (NamingException e) {
             throw new InternalServerException("Problem with getting JDBC resource");
-        } catch (NoRowException e) {
-            throw e;
         }
         return sps;
     }
@@ -241,7 +244,8 @@ public class SingleParkingStopDao {
         if(sps.getDriver().getLastName() != null)	lname = sps.getDriver().getLastName();
 
         try(Connection con = getConnection();
-            ResultSet rs = con.createStatement().executeQuery(
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery(
                     "select count(idp) as num from parking_stops where vehicle_identity='" + vid + "' and driver_fname='" + fname + "' and driver_lname='" + lname + "' and started_meter=true"))
         {
             if(con == null)

@@ -25,8 +25,8 @@
           <element id="library" level="project" name="Gradle: com.sun.jersey:jersey-core:1.13" />
           <element id="library" level="project" name="Gradle: com.sun.jersey:jersey-servlet:1.13" />
           <element id="library" level="project" name="Gradle: com.owlike:genson:0.99" />
+          <element id="library" level="project" name="Gradle: org.apache.commons:commons-lang3:3.0" />
           <element id="library" level="project" name="Gradle: asm:asm:3.1" />
-          <element id="file-copy" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.0/8873bd0bb5cb9ee37f1b04578eb7e26fcdd44cb0/commons-lang3-3.0.jar" />
         </element>
       </element>
     </root>
